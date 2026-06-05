@@ -55,7 +55,7 @@ description: 仅执行 UI 工作流的阶段 1.5 + 2 + 3 + 4 —— 搜素材 + 
 {
   "agent": "ui-research-analyst",
   "task": "<需求摘要 + 搜索结果 + 网站内容>",
-  "agentScope": "project",
+  "agentScope": "both",
   "confirmProjectAgents": false
 }
 ```
@@ -72,7 +72,7 @@ description: 仅执行 UI 工作流的阶段 1.5 + 2 + 3 + 4 —— 搜素材 + 
 {
   "agent": "ui-need-analyst",
   "task": "<需求摘要全文 + 项目背景>",
-  "agentScope": "project",
+  "agentScope": "both",
   "confirmProjectAgents": false
 }
 ```
@@ -88,7 +88,7 @@ description: 仅执行 UI 工作流的阶段 1.5 + 2 + 3 + 4 —— 搜素材 + 
     { "agent": "ui-visual-analyst", "task": "## 需求报告\n<need 报告>\n\n## 参考素材报告\n<research 报告>" }
     // + 用户勾选的可选 agent
   ],
-  "agentScope": "project",
+  "agentScope": "both",
   "confirmProjectAgents": false
 }
 ```

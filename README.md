@@ -107,18 +107,30 @@ git clone --depth 1 https://github.com/zanwei/design-dna.git ~/.pi/agent/skills/
 
 ## 使用方法
 
+### 全局安装（所有项目可用，推荐）
+
+```bash
+# 把 agents 和 prompts 复制到全局目录
+mkdir -p ~/.pi/agent/agents ~/.pi/agent/prompts
+cp pi-ui-workflow/.pi/agents/*.md ~/.pi/agent/agents/
+cp pi-ui-workflow/.pi/prompts/*.md ~/.pi/agent/prompts/
+```
+
+然后在**任何项目**里启动 pi，直接用 `/ui-workflow` 命令。
+
 ### 在本项目里用
 
 ```bash
 cd pi-ui-workflow
 pi
+# 然后输入：
 > /ui-workflow 我要做一个面向独立开发者的极简时间追踪工具
 ```
 
 ### 在别的项目里用
 
 ```bash
-# symlink 方式（推荐）
+# symlink 方式（不想装全局时使用）
 ln -s /path/to/pi-ui-workflow/.pi /path/to/your-project/.pi
 
 cd /path/to/your-project

@@ -96,7 +96,7 @@ argument-hint: "[产品/功能的简要描述]"
 {
   "agent": "ui-research-analyst",
   "task": "<需求摘要 + 搜索到的素材内容 + 内置网站的抓取结果>",
-  "agentScope": "project",
+  "agentScope": "both",
   "confirmProjectAgents": false
 }
 ```
@@ -115,7 +115,7 @@ argument-hint: "[产品/功能的简要描述]"
 {
   "agent": "ui-need-analyst",
   "task": "<阶段 1 确认的需求摘要 + 项目背景 + 用户原始描述>",
-  "agentScope": "project",
+  "agentScope": "both",
   "confirmProjectAgents": false
 }
 ```
@@ -153,13 +153,13 @@ argument-hint: "[产品/功能的简要描述]"
       "task": "基于以下需求报告、形态报告和参考素材报告，给出内容策略：\n\n## 需求报告\n<need 完整报告>\n\n## 参考素材报告\n<research 完整报告>"
     }
   ],
-  "agentScope": "project",
+  "agentScope": "both",
   "confirmProjectAgents": false
 }
 ```
 
 **关键提示**：
-- `agentScope: "project"` 必填
+- `agentScope: "both"` 必填
 - `confirmProjectAgents: false` 跳过安全确认
 - 每个 task **必须把 need 报告和 research 报告的完整内容贴进去**，因为子 Agent 看不到之前的对话
 - 可选的 agent 只加入用户勾选的那些
