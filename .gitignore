@@ -19,4 +19,5 @@ node_modules/
 # 生成的产出（每次运行会重新生成）
 docs/ui-design-spec.md
 docs/ui-need-summary.md
+docs/ui-workflow/
 docs/prototype/

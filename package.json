@@ -1,0 +1,29 @@
+{
+  "name": "pi-ui-workflow",
+  "version": "0.1.0",
+  "description": "UI design workflow prompts and agents for pi coding agent.",
+  "license": "MIT",
+  "keywords": [
+    "pi-package",
+    "pi",
+    "ui-workflow",
+    "design-workflow",
+    "prompt-template"
+  ],
+  "files": [
+    ".pi/prompts",
+    ".pi/agents",
+    "docs",
+    "scripts",
+    "README.md",
+    "LICENSE"
+  ],
+  "pi": {
+    "prompts": [
+      ".pi/prompts/*.md"
+    ]
+  },
+  "scripts": {
+    "check": "bash scripts/check-install.sh"
+  }
+}
