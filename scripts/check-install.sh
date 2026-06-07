@@ -46,9 +46,7 @@ check_dir_files() {
 printf "1. 检查本项目资源\n"
 check_dir_files "$ROOT_DIR/.pi/agents" "*.md" "项目内 agents"
 check_dir_files "$ROOT_DIR/.pi/prompts" "*.md" "项目内 prompts"
-check_file "$ROOT_DIR/.pi/prompts/ui-workflow.md" "项目内 /ui-workflow prompt"
-check_file "$ROOT_DIR/.pi/prompts/ui-review.md" "项目内 /ui-review prompt"
-check_file "$ROOT_DIR/.pi/prompts/ui-align.md" "项目内 /ui-align prompt"
+check_file "$ROOT_DIR/extensions/ui-workflow/index.ts" "内置 extension"
 printf "\n"
 
 printf "2. 检查全局安装状态\n"

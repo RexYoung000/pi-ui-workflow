@@ -2,6 +2,23 @@
 
 本项目遵循语义化版本思路记录变更。
 
+## 0.2.0 - 2026-06-06
+
+### Added
+
+- **新增内置 extension**：`extensions/ui-workflow/`，注册 `ui_workflow_subagent` 工具。
+- Agent 发现模块自动从 package 内部 `.pi/agents/` 读取 7 个 UI 分析 Agent。
+- 用户 `pi install npm:pi-ui-workflow` 后即可使用 `/ui-workflow`，**不再需要手动复制 agents 或安装外部 subagent 扩展**。
+
+### Changed
+
+- 主安装方式改为 `pi install npm:pi-ui-workflow`；手动复制降级为备选方案。
+- `/ui-workflow`、`/ui-review`、`/ui-rerun` 的内部调用从 `subagent` 改为 `ui_workflow_subagent`。
+- `package.json` 增加 `pi.extensions`、`peerDependencies`、`repository`、`bugs`、`homepage`。
+- README 更新安装说明；移除旧 subagent 扩展依赖。
+- `docs/package-plan.md` 更新为当前已实现方案。
+- 版本号升至 `0.2.0`。
+
 ## 0.1.1 - 2026-06-06
 
 ### Changed

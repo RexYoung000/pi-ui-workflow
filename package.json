@@ -1,28 +1,46 @@
 {
   "name": "pi-ui-workflow",
-  "version": "0.1.1",
-  "description": "UI design workflow prompts and agents for pi coding agent.",
+  "version": "0.2.0",
+  "description": "UI design workflow extension for pi coding agent — one command to go from idea to UI design spec.",
   "license": "MIT",
   "keywords": [
     "pi-package",
     "pi",
+    "pi-extension",
     "ui-workflow",
     "design-workflow",
     "prompt-template"
   ],
   "files": [
-    ".pi/prompts",
-    ".pi/agents",
-    "docs",
+    ".pi",
+    "extensions",
     "scripts",
+    "docs",
     "README.md",
     "LICENSE"
   ],
   "pi": {
     "prompts": [
       ".pi/prompts/*.md"
+    ],
+    "extensions": [
+      "extensions/ui-workflow"
     ]
   },
+  "peerDependencies": {
+    "@earendil-works/pi-agent-core": "*",
+    "@earendil-works/pi-ai": "*",
+    "@earendil-works/pi-coding-agent": "*",
+    "typebox": "*"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/RexYoung000/pi-ui-workflow.git"
+  },
+  "bugs": {
+    "url": "https://github.com/RexYoung000/pi-ui-workflow/issues"
+  },
+  "homepage": "https://github.com/RexYoung000/pi-ui-workflow#readme",
   "scripts": {
     "check": "bash scripts/check-install.sh"
   }

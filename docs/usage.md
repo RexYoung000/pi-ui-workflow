@@ -137,9 +137,9 @@ model: glm/glm-5v-turbo
 
 确认 `.pi/prompts/ui-workflow.md` 存在，运行 `/reload`。
 
-### subagent 调用失败
+### Agent 调用失败
 
-检查 `~/.pi/agent/extensions/subagent/index.ts` 和 `agents.ts` 是否存在，`/reload` 一次。
+如果 `ui_workflow_subagent` 提示找不到 Agent，请检查插件是否正确安装：运行 `pi install npm:pi-ui-workflow`，然后在 Pi 中输入 `/reload`。
 
 ### design-dna 没被识别
 

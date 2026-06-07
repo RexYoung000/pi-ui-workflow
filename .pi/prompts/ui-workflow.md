@@ -172,7 +172,7 @@ docs/ui-workflow/
 
 ### 1.5d：调用研究员
 
-用 `subagent` 工具的 **single 模式**调用 `ui-research-analyst`：
+用 `ui_workflow_subagent` 工具的 **single 模式**调用 `ui-research-analyst`：
 
 ```json
 {
@@ -201,13 +201,13 @@ docs/ui-workflow/01-research-report.md
 
 
 
-**Agent 缺失兜底**：如果 subagent 提示找不到对应 Agent，不要继续硬跑。请提示用户先在项目根目录执行：
+**Agent 缺失兜底**：如果 `ui_workflow_subagent` 提示找不到对应 Agent，不要继续硬跑。请提示用户：
 
-```bash
-scripts/check-install.sh
+```text
+在 Pi 中输入 /reload 重新加载扩展和 prompts。如果仍找不到 Agent，说明 package 安装可能有问题，请检查：
+1. 是否通过 pi install npm:pi-ui-workflow 安装
+2. 运行 scripts/check-install.sh 检查安装状态
 ```
-
-或把 `.pi/agents/*.md` 复制到 `~/.pi/agent/agents/` 后在 Pi 中运行 `/reload`。
 
 ---
 
@@ -221,7 +221,7 @@ scripts/check-install.sh
 
 ### 阶段 2a：需求分析（单个）
 
-用 `subagent` 工具 **single 模式**调用 `ui-need-analyst`：
+用 `ui_workflow_subagent` 工具 **single 模式**调用 `ui-need-analyst`：
 
 ```json
 {
@@ -262,7 +262,7 @@ docs/ui-workflow/02-need-report.md
 [阶段 4/6] ⚡ 快速模式：即将并行运行专家，优先缩短等待时间；部分专家会基于假设输出，并在报告里标注风险。
 ```
 
-用 `subagent` 工具 **parallel 模式**，每个 task 至少包含：执行模式 + need 完整报告 + research 完整报告。
+用 `ui_workflow_subagent` 工具 **parallel 模式**，每个 task 至少包含：执行模式 + need 完整报告 + research 完整报告。
 
 ```json
 {
@@ -347,7 +347,7 @@ docs/ui-workflow/02-need-report.md
 4. `ui-interaction-analyst`（如勾选）：输入 need + research + form + visual + ia（如有）。
 5. `ui-content-analyst`（如勾选）：输入 need + research + form + visual + ia + interaction（如有）。
 
-深度模式可以使用 `subagent` 的 single 模式逐个调用，或在不破坏上游依赖的前提下做小范围并行。每一步完成后都要给用户一条等待反馈，例如：
+深度模式可以使用 `ui_workflow_subagent` 的 single 模式逐个调用，或在不破坏上游依赖的前提下做小范围并行。每一步完成后都要给用户一条等待反馈，例如：
 
 ```text
 ✅ 形态报告已完成，正在交给视觉分析师生成 Design Tokens...

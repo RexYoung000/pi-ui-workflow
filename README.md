@@ -6,42 +6,19 @@
 
 > 适合已经安装好 Pi，并且想尽快在任意项目里使用 `/ui-workflow` 的用户。
 
-### 1. 复制工作流到全局 Pi 目录
+### 1. 安装插件
 
 ```bash
-mkdir -p ~/.pi/agent/agents ~/.pi/agent/prompts
-cp .pi/agents/*.md ~/.pi/agent/agents/
-cp .pi/prompts/*.md ~/.pi/agent/prompts/
+pi install npm:pi-ui-workflow
 ```
 
-### 局部复跑
+> 如果 Pi 已在运行中，安装后输入 `/reload` 重新加载扩展和 prompts。
 
-如果已经跑过完整工作流，并且 `docs/ui-workflow/` 中有中间报告，可以使用：
-
-```text
-/ui-rerun 只重跑视觉
-```
-
-它会复用已有报告，只重跑指定部分，减少等待和 token 消耗。
-
-如果你不是在 `pi-ui-workflow` 项目根目录执行，把上面的 `.pi/...` 换成实际路径，例如：
-
-```bash
-cp /path/to/pi-ui-workflow/.pi/agents/*.md ~/.pi/agent/agents/
-cp /path/to/pi-ui-workflow/.pi/prompts/*.md ~/.pi/agent/prompts/
-```
-
-### 2. 进入你的产品项目并启动 Pi
+### 2. 进入产品项目并启动 Pi
 
 ```bash
 cd /path/to/your-product
 pi
-```
-
-如果 Pi 已经在运行，输入：
-
-```text
-/reload
 ```
 
 ### 3. 输入工作流命令
@@ -57,7 +34,17 @@ pi
 3. 然后选择搜索方式和额外分析范围；
 4. 最后生成 `docs/ui-design-spec.md`，并把中间报告归档到 `docs/ui-workflow/`。
 
-> 注意：完整工作流还依赖 `subagent` 扩展和 `design-dna` skill。第一次使用前请继续阅读下面的“依赖”和“使用方法”。
+### 局部复跑
+
+如果已经跑过完整工作流，并且 `docs/ui-workflow/` 中有中间报告，可以使用：
+
+```text
+/ui-rerun 只重跑视觉
+```
+
+它会复用已有报告，只重跑指定部分，减少等待和 token 消耗。
+
+> 注意：完整工作流还依赖 `design-dna` skill（可选，用于更精准的视觉分析和 HTML 原型生成）。首次使用前请继续阅读下面的「依赖」章节。
 
 ## 这是什么
 
@@ -170,6 +157,18 @@ docs/ui-workflow/
 | `/ui-review` | 跑阶段 0+1.5+2+3+4（跳过对齐，直接选择模式、搜索、分析和审核） |
 | `/ui-rerun [范围]` | 基于 `docs/ui-workflow/` 局部复跑视觉、交互、内容或最终规范 |
 
+### 手动安装（备选）
+
+如果不使用 npm 安装，可以手动复制：
+
+```bash
+mkdir -p ~/.pi/agent/agents ~/.pi/agent/prompts
+cp .pi/agents/*.md ~/.pi/agent/agents/
+cp .pi/prompts/*.md ~/.pi/agent/prompts/
+```
+
+> 手动安装方式不会加载内置 extension，因此需要额外安装官方 `subagent` 扩展来运行工作流。
+
 ## 安全默认值
 
 为了适合分发给其他用户，本工作流默认只调用用户全局安装的 Agent：
@@ -222,21 +221,11 @@ docs/ui-workflow/
 
 ## 依赖
 
-工作流依赖两个组件：
+完整工作流通过内置 extension 自动管理 7 个 UI 分析 Agent，**不再需要额外安装 subagent 扩展**。
 
-### 1. subagent 扩展
+仅需以下可选增强：
 
-提供 `subagent` 工具。pi 自带此扩展的例子，复制到全局即可：
-
-```bash
-mkdir -p ~/.pi/agent/extensions/subagent
-# 找到你的 pi 安装目录（通常在 /usr/local/lib/node_modules/@earendil-works/pi-coding-agent）
-# 复制下面的文件到 ~/.pi/agent/extensions/subagent/
-#   - examples/extensions/subagent/index.ts
-#   - examples/extensions/subagent/agents.ts
-```
-
-### 2. design-dna skill
+### 1. design-dna skill（推荐，可选）
 
 视觉分析和 HTML 原型生成会用到。
 
@@ -257,14 +246,13 @@ scripts/check-install.sh
 
 ## 使用方法
 
-### 全局安装（所有项目可用，推荐）
+### npm 安装（推荐）
 
 ```bash
-# 把 agents 和 prompts 复制到全局目录
-mkdir -p ~/.pi/agent/agents ~/.pi/agent/prompts
-cp pi-ui-workflow/.pi/agents/*.md ~/.pi/agent/agents/
-cp pi-ui-workflow/.pi/prompts/*.md ~/.pi/agent/prompts/
+pi install npm:pi-ui-workflow
 ```
+
+> 安装后如果 Pi 已在运行，输入 `/reload` 重新加载。
 
 然后在**任何项目**里启动 pi，直接用 `/ui-workflow` 命令。
 
@@ -273,20 +261,18 @@ cp pi-ui-workflow/.pi/prompts/*.md ~/.pi/agent/prompts/
 ```bash
 cd pi-ui-workflow
 pi
-# 然后输入：
 > /ui-workflow 我要做一个面向独立开发者的极简时间追踪工具
 ```
 
-### 在别的项目里用
+### 手动安装（备选）
 
 ```bash
-# symlink 方式（不想装全局时使用）
-ln -s /path/to/pi-ui-workflow/.pi /path/to/your-project/.pi
-
-cd /path/to/your-project
-pi
-> /ui-workflow 帮我设计一个任务管理界面
+mkdir -p ~/.pi/agent/agents ~/.pi/agent/prompts
+cp .pi/agents/*.md ~/.pi/agent/agents/
+cp .pi/prompts/*.md ~/.pi/agent/prompts/
 ```
+
+注意：手动安装不会加载内置 extension，需要额外安装官方 subagent 扩展。
 
 ### 搜索方式选择
 
