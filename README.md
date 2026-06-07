@@ -191,17 +191,19 @@ cp .pi/prompts/*.md ~/.pi/agent/prompts/
 
 ## Package 化状态
 
-当前项目已提供 `package.json`，其中声明了 Pi 官方支持的 `prompts` 资源：
+当前项目通过 Pi package manifest 声明了 prompts、extensions 和 skills：
 
 ```json
 {
   "pi": {
-    "prompts": [".pi/prompts/*.md"]
+    "prompts": [".pi/prompts/*.md"],
+    "extensions": ["extensions/ui-workflow"],
+    "skills": ["skills/design-dna"]
   }
 }
 ```
 
-注意：Pi package 文档目前没有明确说明 `agents` 可以作为 package manifest 的一等资源类型分发，所以 7 个 UI 子 Agent 仍建议通过复制或后续安装脚本放到 `~/.pi/agent/agents/`。详细方案文档：
+内置 extension 会自动从 package 内部 `.pi/agents/` 加载 7 个 UI 子 Agent，**无需手动复制**。详细方案文档：
 
 - `docs/package-plan.md`：Pi package 化路线
 - `docs/progress-plan.md`：动态进度 / TUI 面板后续方案
