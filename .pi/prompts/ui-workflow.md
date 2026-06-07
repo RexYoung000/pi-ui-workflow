@@ -13,13 +13,11 @@ argument-hint: "[产品/功能的简要描述]"
 
 **目标**：在正式执行前，把“等待时间、token 成本、输出质量”的取舍交给用户。
 
-用 `ask_user_question` 让用户选择执行模式：
+用 `ask_user_question` 让用户选择执行模式。为了避免工具参数过长，选项请使用短 label，把详细说明放到 description：
 
-> **「这次 UI 工作流要用哪种执行模式？」**
->
-> A. **快速模式**（约 2-4 分钟）—— 更适合先看方向，Agent 尽量并行，输出简版设计规范，token 成本低
-> B. **标准模式（推荐）**（约 5-8 分钟）—— 适合大多数正式 UI 设计，采用两段式分析，质量和速度平衡
-> C. **深度模式**（约 8-15 分钟）—— 适合重要产品/关键页面，更完整搜索和更严格的报告传递，输出最完整，token 成本高
+- label: `标准模式（推荐）`；description: `约 5-8 分钟，适合大多数正式 UI 设计；两段式分析，质量和速度平衡。`
+- label: `快速模式`；description: `约 2-4 分钟，适合先看方向；Agent 尽量并行，输出简版设计规范，token 成本低。`
+- label: `深度模式`；description: `约 8-15 分钟，适合重要产品/关键页面；更完整搜索和更严格报告传递，输出最完整。`
 
 选择后，在后续执行中始终遵守对应编排：
 
@@ -125,23 +123,23 @@ docs/ui-workflow/
 
 ### 1.5a：弹窗选择搜索方式
 
-用 `ask_user_question` 弹窗：
+用 `ask_user_question` 弹窗。选项使用短 label，详细说明放 description：
 
-> **「选择搜索方式，我会优先浏览以下网站找参考：godly.website / awwwards.com / mobbin.com / reactbits.dev / supahero.io / 60fps.design / ui-pocket.com / pinterest」**
->
-> A. **TinyFish 搜索**（推荐，免费，已装好）—— 搜索全网 + 浏览内置网站
-> B. **自定义搜索 API** —— 请输入 API endpoint 和 key
-> C. **跳过搜索** —— 不搜素材，研究员基于已有描述直接分析
+- label: `TinyFish 搜索（推荐）`；description: `搜索全网 + 浏览内置参考网站，适合大多数情况。`
+- label: `自定义搜索 API`；description: `用户提供 endpoint 和 key，用 curl 调用；适合已有搜索服务。`
+- label: `跳过搜索`；description: `不搜素材，研究员基于已有描述分析；更快但参考依据更少。`
+
+问题文案中说明会优先浏览：godly.website / awwwards.com / mobbin.com / reactbits.dev / supahero.io / 60fps.design / ui-pocket.com / pinterest。
 
 ### 1.5b：弹窗选择额外分析
 
-用 `ask_user_question` 弹一个多选：
+用 `ask_user_question` 弹一个多选。选项使用短 label，详细说明放 description：
 
-> **基础分析（需求/形态/视觉/素材）会自动跑。还需要以下额外分析吗？**
-> - ☑ 信息架构分析（导航结构、页面层级、跳转关系）
-> - ☑ 交互体验分析（微交互、状态过渡、手势、可访问性）
-> - ☑ 内容策略分析（界面文案、提示语、CTA 语调）
-> 默认全勾，用户可取消。
+- label: `信息架构`；description: `分析导航结构、页面层级、跳转关系和搜索体验。`
+- label: `交互体验`；description: `分析微交互、状态过渡、手势、快捷键和可访问性。`
+- label: `内容策略`；description: `分析界面文案、空状态、错误提示、CTA 和品牌语调。`
+
+建议用户默认全选；如果想省时间，可以取消部分分析。
 
 把用户选择记录到后续 task 里；如需要，也可以补写到 `docs/ui-need-summary.md`。
 
@@ -170,6 +168,8 @@ docs/ui-workflow/
 **如果选 C（跳过）**：
 - 不搜素材。研究员仍然会被调用（基于需求摘要和有限信息做分析）。
 
+**搜索失败兜底**：如果部分内置网站抓取失败、返回内容过少或需要登录，不要中断流程；记录失败来源，继续使用已获取素材和 `tinyfish_search` 结果。最终报告里说明“部分参考来源抓取失败，分析基于可用素材”。
+
 ### 1.5d：调用研究员
 
 用 `subagent` 工具的 **single 模式**调用 `ui-research-analyst`：
@@ -196,6 +196,18 @@ docs/ui-workflow/01-research-report.md
 [阶段 3/6] ✅ 参考素材分析已完成，已保存到 docs/ui-workflow/01-research-report.md。
 下一步：运行需求分析师，形成给所有专家使用的权威需求报告。
 ```
+
+---
+
+
+
+**Agent 缺失兜底**：如果 subagent 提示找不到对应 Agent，不要继续硬跑。请提示用户先在项目根目录执行：
+
+```bash
+scripts/check-install.sh
+```
+
+或把 `.pi/agents/*.md` 复制到 `~/.pi/agent/agents/` 后在 Pi 中运行 `/reload`。
 
 ---
 
@@ -424,13 +436,12 @@ docs/ui-workflow/02-need-report.md
 [阶段 6/6] 🧪 设计规范已就绪：现在可以选择是否生成 HTML 原型。
 ```
 
-用 `ask_user_question` 弹窗：
+用 `ask_user_question`。选项使用短 label，详细说明放 description：
 
-> **「是否生成 HTML 原型？」**
-> 1. 生成完整 HTML 原型 —— 消耗较多 token
-> 2. 仅生成 1 个关键页面的原型（推荐）
-> 3. 仅保留规范文档，不生成原型
-> 4. 跳过
+- label: `关键页面原型（推荐）`；description: `只生成 1 个关键页面，先看效果，token 成本较可控。`
+- label: `完整原型`；description: `生成完整 HTML 原型，效果更完整，但消耗更多 token。`
+- label: `仅保留规范`；description: `不生成 HTML，只保留设计规范文档。`
+- label: `跳过`；description: `不做额外动作。`
 
 如果用户选 1 或 2：
 1. 读 `~/.pi/agent/skills/design-dna/SKILL.md` 了解 Generate 阶段
@@ -446,5 +457,5 @@ docs/ui-workflow/02-need-report.md
 - ✅ 产出文件清单（路径），必须包含 `docs/ui-workflow/` 下的中间报告归档
 - 📊 跑了哪些 Agent、核心结论
 - ⚠️ 待确认问题（来自 need 报告）
-- 💰 Token 消耗概况
+- 💰 成本/耗时体感：说明本次属于快速 / 标准 / 深度模式，以及大致等待和消耗级别，不承诺精确 token 统计
 - 💡 下一步建议

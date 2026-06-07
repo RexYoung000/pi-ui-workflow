@@ -2,6 +2,15 @@
 
 本项目遵循语义化版本思路记录变更。
 
+## 0.1.1 - 2026-06-06
+
+### Changed
+
+- 优化 `/ui-workflow` 和 `/ui-review` 的 `ask_user_question` 执行说明，改为短 label + description 的工具友好格式。
+- 增加搜索失败兜底：部分参考网站抓取失败时不中断流程，继续使用可用素材。
+- 增加 Agent 缺失兜底：subagent 找不到 Agent 时提示运行 `scripts/check-install.sh` 或复制 agents 后 `/reload`。
+- 最终汇报中的 token 表述改为“成本/耗时体感”，避免承诺精确 token 统计。
+
 ## 0.1.0 - 2026-06-06
 
 ### Added
