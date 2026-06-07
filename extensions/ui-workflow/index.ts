@@ -32,8 +32,7 @@ interface UsageStats {
 	turns: number;
 }
 
-interface
-SingleResult {
+interface SingleResult {
 	agent: string;
 	agentSource: "user" | "project" | "package" | "unknown";
 	task: string;
