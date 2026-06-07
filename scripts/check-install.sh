@@ -56,19 +56,20 @@ check_file "$HOME/.pi/agent/prompts/ui-review.md" "全局 /ui-review prompt"
 check_file "$HOME/.pi/agent/prompts/ui-align.md" "全局 /ui-align prompt"
 printf "\n"
 
-printf "3. 检查依赖\n"
-if [[ -f "$HOME/.pi/agent/extensions/subagent/index.ts" || -f "$HOME/.pi/agent/extensions/subagent/index.js" ]]; then
-  ok "subagent 扩展已安装"
+printf "3. 检查扩展和内置 skill\n"
+check_file "$ROOT_DIR/extensions/ui-workflow/index.ts" "内置 extension"
+
+if [[ -f "$ROOT_DIR/skills/design-dna/SKILL.md" ]]; then
+  ok "design-dna skill（已内置）"
 else
-  warn "subagent 扩展未在 ~/.pi/agent/extensions/subagent/ 下找到"
-  warn "请参考 README 的依赖章节安装 subagent 扩展"
+  warn "design-dna 未在 ${ROOT_DIR}/skills/design-dna/SKILL.md 找到"
 fi
 
-if [[ -f "$HOME/.pi/agent/skills/design-dna/SKILL.md" ]]; then
-  ok "design-dna skill 已安装"
+# 旧版兼容提示
+if [[ -f "$HOME/.pi/agent/extensions/subagent/index.ts" || -f "$HOME/.pi/agent/extensions/subagent/index.js" ]]; then
+  ok "subagent 扩展已安装（旧版兼容）"
 else
-  warn "design-dna skill 未在 ~/.pi/agent/skills/design-dna/SKILL.md 找到"
-  warn "如需视觉分析和 HTML 原型，请参考 README 安装 design-dna"
+  ok "subagent 扩展无需独立安装（V0.2.0 已内置）"
 fi
 printf "\n"
 

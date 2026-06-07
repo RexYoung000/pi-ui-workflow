@@ -143,7 +143,7 @@ model: glm/glm-5v-turbo
 
 ### design-dna 没被识别
 
-检查 `~/.pi/agent/skills/design-dna/SKILL.md` 是否存在，frontmatter 是否有 name 和 description。
+design-dna 已内置在本插件中。如果 Pi 提示找不到，请在 Pi 中运行 `/reload` 重新加载。
 
 ### 分析师报告质量差
 

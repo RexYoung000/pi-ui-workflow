@@ -44,7 +44,7 @@ pi
 
 它会复用已有报告，只重跑指定部分，减少等待和 token 消耗。
 
-> 注意：完整工作流还依赖 `design-dna` skill（可选，用于更精准的视觉分析和 HTML 原型生成）。首次使用前请继续阅读下面的「依赖」章节。
+> 本插件已内置 design-dna、所有 Agent 和子 Agent 调用引擎，安装后即可直接使用。唯一可选增强是 TinyFish 搜索（用于设计素材搜索，可跳过）。
 
 ## 这是什么
 
@@ -221,18 +221,19 @@ cp .pi/prompts/*.md ~/.pi/agent/prompts/
 
 ## 依赖
 
-完整工作流通过内置 extension 自动管理 7 个 UI 分析 Agent，**不再需要额外安装 subagent 扩展**。
+本插件已内置 7 个 UI 分析 Agent、design-dna skill 和子 Agent 调用引擎，**不再需要额外安装任何依赖**。
 
-仅需以下可选增强：
+以下为可选增强：
 
-### 1. design-dna skill（推荐，可选）
+### TinyFish 搜索（可选）
 
-视觉分析和 HTML 原型生成会用到。
+如果希望工作流能自动搜索设计参考素材，可以安装：
 
 ```bash
-mkdir -p ~/.pi/agent/skills
-git clone --depth 1 https://github.com/zanwei/design-dna.git ~/.pi/agent/skills/design-dna
+pi install npm:pi-tinyfish-tools
 ```
+
+没有它也可以正常使用，只需在搜索阶段选择「跳过搜索」即可。
 
 ### 检查安装状态
 

@@ -1,6 +1,6 @@
 {
   "name": "pi-ui-workflow",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "UI design workflow extension for pi coding agent — one command to go from idea to UI design spec.",
   "license": "MIT",
   "keywords": [
@@ -14,6 +14,7 @@
   "files": [
     ".pi",
     "extensions",
+    "skills",
     "scripts",
     "docs",
     "README.md",
@@ -25,6 +26,9 @@
     ],
     "extensions": [
       "extensions/ui-workflow"
+    ],
+    "skills": [
+      "skills/design-dna"
     ]
   },
   "peerDependencies": {
