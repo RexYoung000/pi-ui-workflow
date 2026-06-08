@@ -198,15 +198,68 @@ cp .pi/prompts/*.md ~/.pi/agent/prompts/
   "pi": {
     "prompts": [".pi/prompts/*.md"],
     "extensions": ["extensions/ui-workflow"],
-    "skills": ["skills/design-dna"]
+    "skills": ["skills/design-dna", "skills/ui-workflow"]
   }
 }
 ```
 
-内置 extension 会自动从 package 内部 `.pi/agents/` 加载 7 个 UI 子 Agent，**无需手动复制**。详细方案文档：
+内置 extension 会自动从 package 内部 `.pi/agents/` 加载 7 个 UI 子 Agent，**无需手动复制**。
 
+项目现在也额外暴露了一个通用 `ui-workflow` skill。这样其他兼容 Agent Skills 的 agent 即使没有 Pi 的 slash command，也可以读取同一套 UI/UX 工作流规范并执行。
+
+详细方案文档：
+
+- `skills/ui-workflow/SKILL.md`：通用 skill 入口
+- `skills/ui-workflow/references/workflow-protocol.md`：Pi 自动化版本和通用版本共用的流程源头
+- `skills/ui-workflow/references/external-skill-sources.md`：相关 UI/UX skill 源头文档与智能调用路由
 - `docs/package-plan.md`：Pi package 化路线
 - `docs/progress-plan.md`：动态进度 / TUI 面板后续方案
+
+## 作为 Skill 使用
+
+安装后，Pi 用户仍然可以使用自动化命令：
+
+```text
+/ui-workflow 我要做一个面向独立开发者的极简时间追踪工具
+```
+
+也可以显式加载通用 skill：
+
+```text
+/skill:ui-workflow
+```
+
+其他兼容 Agent Skills 的 agent 可以读取：
+
+```text
+skills/ui-workflow/SKILL.md
+```
+
+通用 skill 和 Pi 命令使用同一套流程协议，源头文件是：
+
+```text
+skills/ui-workflow/references/workflow-protocol.md
+```
+
+### 外部 UI/UX Skill 智能调用
+
+`ui-workflow` skill 内置了一份相关专业 skill 源头文档：
+
+```text
+skills/ui-workflow/references/external-skill-sources.md
+```
+
+相关 agent 在每个阶段开始前，可以查询这份文档，判断是否需要调用更专业的外部 skill。比如：
+
+- `anthropics/frontend-design`：用于更有辨识度的前端 UI、避免通用 AI 味视觉
+- `vercel-labs/web-design-guidelines`：用于 UI 审查、可访问性和 Web 界面规范
+- `ui-ux-pro-max` / `ui-design`：用于设计系统建议
+- `typography-audit`：用于字体和排版判断
+- `ui-animation` / `greensock/gsap-*`：用于动效和交互
+- `copywriting`：用于产品文案和微文案
+- `design-md`：用于沉淀长期 `DESIGN.md` 项目设计上下文
+
+这些外部 skill 都是可选增强，不是硬依赖。没有安装时，工作流会继续使用本项目内置规则执行。
 
 ## 内置参考网站
 
@@ -315,6 +368,16 @@ pi-ui-workflow/
 │       ├── ui-workflow.md               /ui-workflow 完整流程
 │       ├── ui-align.md                  /ui-align 仅对齐
 │       └── ui-review.md                 /ui-review 仅审核
+├── skills/
+│   ├── design-dna/                      内置 design-dna skill
+│   └── ui-workflow/                     通用 UI 工作流 skill + 外部 skill 路由
+│       ├── SKILL.md
+│       └── references/
+│           ├── workflow-protocol.md
+│           ├── external-skill-sources.md
+│           ├── agent-roles.md
+│           ├── artifact-templates.md
+│           └── quality-checklist.md
 ├── docs/
 │   └── usage.md                         详细使用说明
 └── README.md

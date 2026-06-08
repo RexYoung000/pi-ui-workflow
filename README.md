@@ -214,16 +214,69 @@ The project uses Pi package manifest to declare prompts, extensions, and skills:
   "pi": {
     "prompts": [".pi/prompts/*.md"],
     "extensions": ["extensions/ui-workflow"],
-    "skills": ["skills/design-dna"]
+    "skills": ["skills/design-dna", "skills/ui-workflow"]
   }
 }
 ```
 
 The built-in extension auto-loads the 7 UI sub-agents from the package's bundled `.pi/agents/`, requiring **no manual copying**.
 
+The package also exposes a universal `ui-workflow` skill. This lets other Agent Skills-compatible agents use the same UI/UX workflow even when Pi slash commands are unavailable.
+
 See also:
+- `skills/ui-workflow/SKILL.md`: Universal skill entry point
+- `skills/ui-workflow/references/workflow-protocol.md`: Shared source of truth for Pi and universal execution
+- `skills/ui-workflow/references/external-skill-sources.md`: Related UI/UX skill source directory and routing map
 - `docs/package-plan.md`: Packaging roadmap
 - `docs/progress-plan.md`: Dynamic progress / TUI panel future plans
+
+---
+
+## Use as a Skill
+
+After installation, Pi users can still use the automated command:
+
+```text
+/ui-workflow I want to build a minimalist time tracker for indie developers
+```
+
+They can also explicitly load the universal skill:
+
+```text
+/skill:ui-workflow
+```
+
+Other Agent Skills-compatible agents can read:
+
+```text
+skills/ui-workflow/SKILL.md
+```
+
+The universal skill follows the same workflow as the Pi command. The shared protocol lives in:
+
+```text
+skills/ui-workflow/references/workflow-protocol.md
+```
+
+### External UI/UX Skill Routing
+
+The `ui-workflow` skill includes a source directory for related professional UI/UX skills:
+
+```text
+skills/ui-workflow/references/external-skill-sources.md
+```
+
+Agents should consult it before each stage and use relevant skills when available. Examples include:
+
+- `anthropics/frontend-design` for distinctive frontend UI and anti-generic visual direction
+- `vercel-labs/web-design-guidelines` for UI review, accessibility, and web interface standards
+- `ui-ux-pro-max` / `ui-design` for design-system recommendations
+- `typography-audit` for typography decisions
+- `ui-animation` / `greensock/gsap-*` for motion and interaction
+- `copywriting` for product copy and microcopy
+- `design-md` for long-lived `DESIGN.md` project context
+
+These external skills are optional enhancements, not hard dependencies. If they are unavailable, the workflow continues with built-in guidance.
 
 ---
 
@@ -318,7 +371,15 @@ pi-ui-workflow/
 │       ├── agents.ts                    Agent discovery (incl. package agents)
 │       └── index.ts                     ui_workflow_subagent tool
 ├── skills/
-│   └── design-dna/                      Bundled design-dna skill
+│   ├── design-dna/                      Bundled design-dna skill
+│   └── ui-workflow/                     Universal UI workflow skill + external skill routing
+│       ├── SKILL.md
+│       └── references/
+│           ├── workflow-protocol.md
+│           ├── external-skill-sources.md
+│           ├── agent-roles.md
+│           ├── artifact-templates.md
+│           └── quality-checklist.md
 ├── scripts/
 │   └── check-install.sh                 Installation health check
 ├── docs/

@@ -28,7 +28,8 @@
       "extensions/ui-workflow"
     ],
     "skills": [
-      "skills/design-dna"
+      "skills/design-dna",
+      "skills/ui-workflow"
     ]
   },
   "peerDependencies": {

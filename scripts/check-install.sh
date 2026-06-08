@@ -65,6 +65,20 @@ else
   warn "design-dna 未在 ${ROOT_DIR}/skills/design-dna/SKILL.md 找到"
 fi
 
+if [[ -f "$ROOT_DIR/skills/ui-workflow/SKILL.md" ]]; then
+  ok "ui-workflow skill（通用适配已内置）"
+else
+  fail "ui-workflow skill 缺失：${ROOT_DIR}/skills/ui-workflow/SKILL.md"
+  missing=1
+fi
+
+if [[ -f "$ROOT_DIR/skills/ui-workflow/references/external-skill-sources.md" ]]; then
+  ok "外部 UI/UX skill 源头文档"
+else
+  fail "外部 UI/UX skill 源头文档缺失：${ROOT_DIR}/skills/ui-workflow/references/external-skill-sources.md"
+  missing=1
+fi
+
 # 旧版兼容提示
 if [[ -f "$HOME/.pi/agent/extensions/subagent/index.ts" || -f "$HOME/.pi/agent/extensions/subagent/index.js" ]]; then
   ok "subagent 扩展已安装（旧版兼容）"
