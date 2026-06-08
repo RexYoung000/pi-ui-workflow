@@ -2,7 +2,7 @@
 
 A **UI design workflow** for [pi coding agent](https://github.com/earendil-works/pi-coding-agent). A lead reviewer (main AI) orchestrates 7 specialized sub-agents (4 required + 3 optional) covering requirements, form, visuals, information architecture, interaction, and content — producing an executable UI design spec, with optional high-fidelity HTML prototypes.
 
-> 📖 [中文文档](README.zh-CN.md)
+> 📖 [中文文档](docs/README.zh-CN.md)
 
 ## 30 Second Quickstart
 

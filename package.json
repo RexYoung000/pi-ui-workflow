@@ -1,16 +1,8 @@
 {
   "name": "pi-ui-workflow",
-  "version": "0.2.4",
+  "version": "0.2.7",
   "description": "UI design workflow extension for pi coding agent — one command to go from idea to UI design spec.",
   "license": "MIT",
-  "keywords": [
-    "pi-package",
-    "pi",
-    "pi-extension",
-    "ui-workflow",
-    "design-workflow",
-    "prompt-template"
-  ],
   "files": [
     ".pi",
     "extensions",
@@ -19,6 +11,14 @@
     "docs",
     "README.md",
     "LICENSE"
+  ],
+  "keywords": [
+    "pi-package",
+    "pi",
+    "pi-extension",
+    "ui-workflow",
+    "design-workflow",
+    "prompt-template"
   ],
   "pi": {
     "prompts": [
