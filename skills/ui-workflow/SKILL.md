@@ -102,13 +102,17 @@ When the user's current request clearly benefits from a specialized external ski
 
 Typical routing:
 
+- Platform-aware quality review across Web, mobile, desktop, Apple platforms, Android, decks, infographics, and motion deliverables: `ehmo/platform-design-skills` plus built-in platform checklists
+- High-fidelity HTML prototypes, clickable App/Web demos, launch motion, presentation decks, infographics, multi-direction visual demos: `alchaincyf/huashu-design`
 - Visual direction / anti-AI-slop UI: `anthropics/frontend-design`
 - Visual art / hero mood / brand poster direction: `anthropics/canvas-design`
 - Design-system recommendation: `ui-ux-pro-max`, `ui-design`, `design-dna`
 - Typography: `typography-audit`
-- Interaction and motion: `ui-animation`, `greensock/gsap-*`
-- UX and final audit: `ux-audit`, `ui-audit`, `vercel-labs/web-design-guidelines`
-- Accessibility / production quality: `addyosmani/accessibility`, `addyosmani/web-quality-audit`
+- Mobile app UI and navigation: `ceorkm/mobile-app-ui-design`, `ehmo/platform-design-skills`
+- Apple platform / HIG review: `ehmo/platform-design-skills`, `raintree-technology/hig-doctor`; SwiftUI implementation: `AvdLee/SwiftUI-Agent-Skill`
+- Web-specific audit: `vercel-labs/web-design-guidelines`, `addyosmani/accessibility`, `addyosmani/web-quality-audit`, `addyosmani/core-web-vitals`
+- Interaction and motion: `ui-animation`, `greensock/gsap-*`; use `huashu-design` when the desired output is an exported animation, MP4/GIF, or polished motion prototype
+- UX and final audit: `ux-audit`, `ui-audit`; choose platform-specific quality skills based on the target surface
 - Figma/design handoff: `figma-implement-design`, `design-md`
 - Product copy and microcopy: `copywriting`, CRO skills
 
@@ -125,6 +129,7 @@ The final spec should be practical enough for implementation and cover:
 - Product positioning
 - Target users
 - Core user scenarios
+- Target platform and platform-specific quality criteria
 - Page structure
 - Navigation and information architecture
 - Layout and component strategy

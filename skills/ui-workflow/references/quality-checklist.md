@@ -2,6 +2,46 @@
 
 Use this checklist before considering the UI workflow complete.
 
+## Platform-aware Quality Gate
+
+- [ ] The target platform is explicitly identified: Web, mobile app, iOS, Android, desktop/local software, cross-platform, deck, infographic, or motion deliverable.
+- [ ] Web-only standards were not applied as the primary checklist for non-Web products.
+- [ ] If multiple platforms are targeted, each platform is reviewed separately before shared design decisions are finalized.
+- [ ] Platform-specific conventions, input methods, accessibility expectations, and system patterns are documented.
+
+### Web / SaaS / Dashboard / Landing Page
+
+- [ ] Responsive behavior covers mobile, tablet, desktop, and wide screens where relevant.
+- [ ] Keyboard navigation, focus visibility, semantic structure, and form behavior are defined.
+- [ ] Loading, empty, error, and success states are clear.
+- [ ] Performance-sensitive design choices are called out.
+- [ ] Use `web-design-guidelines`, `accessibility`, `web-quality-audit`, or `core-web-vitals` when available.
+
+### Mobile App / iOS / Android
+
+- [ ] Navigation matches the target platform: iOS, Android, or cross-platform conventions.
+- [ ] Touch targets, thumb reach, safe areas, system bars, and bottom actions are considered.
+- [ ] Gestures are discoverable and have non-gesture fallbacks when needed.
+- [ ] Onboarding, permissions, weak-network/offline states, and push/notification moments are addressed when relevant.
+- [ ] Dynamic Type/font scaling, dark mode, screen reader behavior, and reduced motion are considered.
+- [ ] Use `ehmo/platform-design-skills`, `mobile-app-ui-design`, or `hig-doctor` for Apple-platform review when available.
+
+### Desktop App / Local Software
+
+- [ ] Window resizing, minimum size, multi-panel layout, and information density are considered.
+- [ ] Menus, toolbars, sidebars, context menus, and status areas are defined when relevant.
+- [ ] Keyboard shortcuts, selection models, drag/drop, and power-user flows are addressed.
+- [ ] Native OS conventions are respected for macOS, Windows, or Linux where known.
+- [ ] Use `ehmo/platform-design-skills` for macOS or cross-platform references when available.
+
+### Deck / Infographic / Motion Deliverable
+
+- [ ] Narrative flow and slide/scene sequencing are clear.
+- [ ] Typography, visual hierarchy, and distance readability are checked.
+- [ ] Motion timing, transitions, and export quality are defined when relevant.
+- [ ] Brand assets and visual consistency are preserved.
+- [ ] Use `huashu-design` and `typography-audit` when available.
+
 ## Product Fit
 
 - [ ] The spec explains who the product is for.

@@ -87,8 +87,14 @@ First check available relevant skills using `references/external-skill-sources.m
 
 Recommended skill routing:
 
+- Platform-aware quality review: first identify Web, mobile, desktop, Apple platform, Android, deck, infographic, motion, or cross-platform targets; do not apply web-only standards to every surface.
+- Cross-platform design rules: `ehmo/platform-design-skills`
 - Visual frontend quality: `anthropics/frontend-design`
+- High-fidelity prototypes / motion / decks / infographics: `alchaincyf/huashu-design`
 - Web design/audit guidelines: `vercel-labs/web-design-guidelines`
+- Apple platform HIG audit: `raintree-technology/hig-doctor`
+- Mobile app UI design: `ceorkm/mobile-app-ui-design`
+- SwiftUI implementation review: `AvdLee/SwiftUI-Agent-Skill`
 - Industry design-system recommendation: `ui-ux-pro-max`
 - Typography: `typography-audit`
 - Motion: `ui-animation` or `greensock/gsap-*`
@@ -192,6 +198,18 @@ Run these by default in Standard and Deep mode unless user opts out.
 ## Stage 3 — Integrate Final Spec
 
 Goal: synthesize all reports into one coherent implementation-ready design spec.
+
+Before final review, identify the target platform and apply platform-specific quality criteria. Do not use web-only standards for mobile apps, desktop apps, decks, infographics, motion deliverables, or native software.
+
+Platform-aware quality gates:
+
+- **Web / SaaS / Dashboard / Landing page**: review responsive behavior, semantic structure, keyboard access, focus states, forms, loading/error/empty states, performance, and WCAG accessibility. Use `web-design-guidelines`, `accessibility`, or `web-quality-audit` when available.
+- **iOS / iPadOS / macOS / Apple ecosystem**: review Apple HIG conventions, navigation, safe areas, Dynamic Type, dark mode, gestures, pointer/keyboard behavior, window/menu patterns, and platform components. Use `ehmo/platform-design-skills` or `hig-doctor` when available.
+- **Android**: review Material Design 3 conventions, navigation, touch targets, dynamic color, system back behavior, typography, accessibility, and adaptive layouts. Use `ehmo/platform-design-skills` when available.
+- **Mobile app generic / cross-platform mobile**: review thumb reach, bottom navigation, gesture discoverability, safe areas, onboarding, permissions, offline/weak-network states, and platform differences. Use `mobile-app-ui-design` and platform rules when available.
+- **Desktop app / local software**: review menu bars, toolbars, panels, window resizing, keyboard shortcuts, context menus, information density, selection models, drag/drop, and native OS conventions.
+- **Deck / PPT / infographic / motion deliverable**: review narrative flow, visual hierarchy, readability, export quality, timing, typography, and brand consistency. Use `huashu-design` and `typography-audit` when available.
+- **Cross-platform products**: review each target platform separately, then resolve conflicts into shared tokens and platform-specific adaptations.
 
 Check for conflicts:
 

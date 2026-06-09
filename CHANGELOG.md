@@ -2,6 +2,19 @@
 
 本项目遵循语义化版本思路记录变更。
 
+## 0.2.8 - 2026-06-09
+
+### Added
+
+- `ui-workflow` 新增端口感知质量门：最终审核前先识别 Web、移动 App、Apple 平台、Android、桌面软件、Deck、信息图、Motion 或跨平台目标，再应用对应检查标准。
+- 外部 skill 路由新增 `ehmo/platform-design-skills`、`alchaincyf/huashu-design`、`raintree-technology/hig-doctor`、`ceorkm/mobile-app-ui-design`、`AvdLee/SwiftUI-Agent-Skill`。
+- `quality-checklist.md` 增加 Web、移动端、桌面软件、Deck/信息图/Motion 的平台专项检查项。
+
+### Changed
+
+- `web-design-guidelines` 调整为 Web 专项审核，不再作为所有端口的默认最终质量标准。
+- 原型、动画、PPT、信息图等高保真交付场景优先路由到 `huashu-design`。
+
 ## 0.2.0 - 2026-06-06
 
 ### Added
