@@ -1,0 +1,178 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=800,height=500">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    width: 800px; height: 500px;
+    background: #0d1117;
+    font-family: 'SF Mono', 'Menlo', 'Monaco', monospace;
+    color: #c9d1d9;
+    display: flex; flex-direction: column;
+    overflow: hidden;
+  }
+  .header {
+    background: #161b22; border-bottom: 1px solid #30363d;
+    padding: 10px 16px;
+    display: flex; align-items: center; gap: 8px;
+    font-size: 13px;
+  }
+  .header .title { color: #f78166; font-weight: bold; }
+  .header .step { color: #8b949e; font-size: 11px; }
+  .flow {
+    display: flex; align-items: center; gap: 0;
+    padding: 10px 16px;
+    background: #0d1117;
+    border-bottom: 1px solid #21262d;
+    overflow-x: auto;
+  }
+  .flow-step {
+    display: flex; align-items: center; gap: 4px;
+    font-size: 11px; padding: 4px 10px;
+    border-radius: 4px; white-space: nowrap;
+  }
+  .flow-step.done { color: #3fb950; }
+  .flow-step.active { 
+    color: #f0f6fc; background: #1c2128; 
+    border: 1px solid #f78166; 
+    animation: pulse 2s infinite;
+  }
+  .flow-step.pending { color: #484f58; }
+  @keyframes pulse { 0%,100% { opacity:1; } 50% { opacity:0.7; } }
+  .flow-arrow { color: #30363d; font-size: 10px; }
+  .main { display: flex; flex: 1; overflow: hidden; }
+  .agents {
+    width: 240px; border-right: 1px solid #30363d;
+    padding: 10px 0; overflow-y: hidden;
+  }
+  .agents .section { 
+    font-size: 10px; color: #484f58; 
+    padding: 6px 14px; text-transform: uppercase; 
+  }
+  .agent {
+    padding: 7px 14px; font-size: 12px; color: #8b949e;
+    display: flex; align-items: center; gap: 8px;
+    cursor: default;
+  }
+  .agent.done { color: #3fb950; }
+  .agent.active { color: #58a6ff; background: #1c2128; }
+  .agent .check { color: #3fb950; font-size: 10px; }
+  .agent .spinner {
+    width: 12px; height: 12px; border: 2px solid #30363d;
+    border-top: 2px solid #58a6ff; border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+  }
+  @keyframes spin { to { transform: rotate(360deg); } }
+  .output {
+    flex: 1; padding: 14px; overflow: hidden;
+  }
+  .status-card {
+    background: #161b22; border: 1px solid #30363d;
+    border-radius: 6px; padding: 12px 14px; margin-bottom: 10px;
+  }
+  .status-card .title { font-size: 13px; color: #f0f6fc; margin-bottom: 4px; }
+  .status-card .detail { font-size: 11px; color: #8b949e; }
+  .progress {
+    background: #21262d; border-radius: 4px; height: 4px;
+    margin-top: 8px; overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%; width: 42%;
+    background: linear-gradient(90deg, #58a6ff, #f78166);
+    border-radius: 4px; transition: width 0.5s;
+  }
+  .spec-preview {
+    background: #161b22; border: 1px solid #30363d;
+    border-radius: 6px; padding: 12px 14px;
+  }
+  .spec-preview .label { font-size: 10px; color: #8b949e; text-transform: uppercase; margin-bottom: 6px; }
+  .spec-preview .line { 
+    font-size: 11px; margin-bottom: 3px; line-height: 1.5; 
+  }
+  .spec-preview .line .key { color: #58a6ff; }
+  .spec-preview .line .val { color: #c9d1d9; }
+  .spec-preview .line .token { 
+    color: #f78166; background: #1a1513; 
+    padding: 1px 5px; border-radius: 3px; font-size: 10px; 
+  }
+  .footer {
+    background: #161b22; border-top: 1px solid #30363d;
+    padding: 6px 16px; font-size: 10px; color: #8b949e;
+    display: flex; justify-content: space-between;
+  }
+</style>
+</head>
+<body>
+<div class="header">
+  <span>🎨</span>
+  <span class="title">/ui-workflow</span>
+  <span class="step">标准模式 · 6 阶段</span>
+  <span style="color:#484f58;margin-left:auto">预计 5-8 分钟</span>
+</div>
+
+<div class="flow">
+  <span class="flow-step done">✅ 对齐需求</span>
+  <span class="flow-arrow">→</span>
+  <span class="flow-step done">✅ 素材搜索</span>
+  <span class="flow-arrow">→</span>
+  <span class="flow-step done">✅ 需求分析</span>
+  <span class="flow-arrow">→</span>
+  <span class="flow-step active">🔄 专家分析</span>
+  <span class="flow-arrow">→</span>
+  <span class="flow-step pending">⏳ 总审核</span>
+  <span class="flow-arrow">→</span>
+  <span class="flow-step pending">⏳ HTML原型</span>
+</div>
+
+<div class="main">
+  <div class="agents">
+    <div class="section">必选专家 (4)</div>
+    <div class="agent active">
+      <span class="spinner"></span> 🧠 需求分析师
+    </div>
+    <div class="agent done">
+      <span class="check">✓</span> 🏗️ 形态分析师
+    </div>
+    <div class="agent done">
+      <span class="check">✓</span> 🎨 视觉分析师
+    </div>
+    <div class="agent done">
+      <span class="check">✓</span> 🔍 素材研究员
+    </div>
+    <div class="section" style="margin-top:8px">可选专家 (3)</div>
+    <div class="agent active">
+      <span class="spinner"></span> 🗂️ 信息架构师
+    </div>
+    <div class="agent">💫 交互分析师</div>
+    <div class="agent">✍️ 内容策略师</div>
+  </div>
+
+  <div class="output">
+    <div class="status-card">
+      <div class="title">[阶段 4/6] 🧠 正在运行专家分析</div>
+      <div class="detail">form + visual 已完成，正在跑 ia → interaction → content</div>
+      <div class="progress"><div class="progress-fill"></div></div>
+    </div>
+
+    <div class="spec-preview">
+      <div class="label">📄 docs/ui-design-spec.md 预览</div>
+      <div class="line"><span class="key">## 设计令牌</span></div>
+      <div class="line">  <span class="key">primary:</span> <span class="token">#3B82F6</span>  <span class="key">bg:</span> <span class="token">#0F172A</span>  <span class="key">surface:</span> <span class="token">#1E293B</span></div>
+      <div class="line">  <span class="key">font:</span> <span class="val">Inter</span>  <span class="key">radius:</span> <span class="token">8px</span>  <span class="key">shadow:</span> <span class="token">0 4px 12px rgba(0,0,0,.3)</span></div>
+      <div class="line" style="margin-top:6px"><span class="key">## 页面类型</span></div>
+      <div class="line">  <span class="val">Dashboard + List/Detail + Settings</span></div>
+      <div class="line" style="margin-top:6px"><span class="key">## 组件选型</span></div>
+      <div class="line">  <span class="val">DataGrid, StatCard, LineChart, FilterBar, Modal</span></div>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <span>7 个子 Agent 协同</span>
+  <span>输出：设计规范文档 + 可选 HTML 原型</span>
+  <span>内置 8 个参考设计站</span>
+</div>
+</body>
+</html>
