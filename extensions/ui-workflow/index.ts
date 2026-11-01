@@ -12,13 +12,12 @@ import * as path from "node:path";
 import type { AgentToolResult } from "@earendil-works/pi-agent-core";
 import type { Message } from "@earendil-works/pi-ai";
 import { StringEnum } from "@earendil-works/pi-ai";
-import { type ExtensionAPI, withFileMutationQueue } from "@earendil-works/pi-coding-agent";
+import { type ExtensionAPI, withFileMutationQueue, truncateHead } from "@earendil-works/pi-coding-agent";
 import { Type } from "typebox";
 import { type AgentConfig, type AgentScope, discoverAgents } from "./agents.ts";
 
 const MAX_PARALLEL_TASKS = 8;
 const MAX_CONCURRENCY = 4;
-const PER_TASK_OUTPUT_CAP = 50 * 1024;
 
 /* ==================== 类型定义 ==================== */
 
@@ -80,12 +79,13 @@ function getResultOutput(result: SingleResult): string {
 	return getFinalOutput(result.messages) || "(no output)";
 }
 
-function truncateParallelOutput(output: string): string {
-	const byteLength = Buffer.byteLength(output, "utf8");
-	if (byteLength <= PER_TASK_OUTPUT_CAP) return output;
-	let truncated = output.slice(0, PER_TASK_OUTPUT_CAP);
-	while (Buffer.byteLength(truncated, "utf8") > PER_TASK_OUTPUT_CAP) truncated = truncated.slice(0, -1);
-	return `${truncated}\n\n[Output truncated: ${byteLength - Buffer.byteLength(truncated, "utf8")} bytes omitted.]`;
+async function boundedOutput(output: string): Promise<string> {
+	const truncated = truncateHead(output);
+	if (!truncated.truncated) return output;
+	const dir = await fs.promises.mkdtemp(path.join(os.tmpdir(), "pi-uiwf-output-"));
+	const file = path.join(dir, "output.txt");
+	await withFileMutationQueue(file, () => fs.promises.writeFile(file, output, { encoding: "utf8", mode: 0o600 }));
+	return `${truncated.content}\n\n[Output truncated. Full output: ${file}]`;
 }
 
 async function mapWithConcurrencyLimit<TIn, TOut>(
@@ -137,6 +137,7 @@ function getPiInvocation(args: string[]): { command: string; args: string[] } {
 
 async function runSingleAgent(
 	defaultCwd: string,
+	dispatch: { model?: string; thinkingLevel?: string },
 	agents: AgentConfig[],
 	agentName: string,
 	task: string,
@@ -163,7 +164,9 @@ async function runSingleAgent(
 	}
 
 	const args: string[] = ["--mode", "json", "-p", "--no-session"];
-	if (agent.model) args.push("--model", agent.model);
+	const model = agent.model ?? dispatch.model;
+	if (model) args.push("--model", model);
+	if (!agent.model && dispatch.thinkingLevel) args.push("--thinking", dispatch.thinkingLevel);
 	if (agent.tools && agent.tools.length > 0) args.push("--tools", agent.tools.join(","));
 
 	let tmpPromptDir: string | null = null;
@@ -177,7 +180,7 @@ async function runSingleAgent(
 		messages: [],
 		stderr: "",
 		usage: { input: 0, output: 0, cacheRead: 0, cacheWrite: 0, cost: 0, contextTokens: 0, turns: 0 },
-		model: agent.model,
+		model,
 		step,
 	};
 
@@ -258,7 +261,7 @@ async function runSingleAgent(
 
 			proc.on("close", (code: number | null) => {
 				if (buffer.trim()) processLine(buffer);
-				resolve(code ?? 0);
+				resolve(code ?? 1);
 			});
 
 			proc.on("error", () => resolve(1));
@@ -268,7 +271,7 @@ async function runSingleAgent(
 					wasAborted = true;
 					proc.kill("SIGTERM");
 					setTimeout(() => {
-						if (!proc.killed) proc.kill("SIGKILL");
+						if (proc.exitCode === null && proc.signalCode === null) proc.kill("SIGKILL");
 					}, 5000);
 				};
 				if (signal.aborted) killProc();
@@ -315,10 +318,13 @@ export default function (pi: ExtensionAPI) {
 		description:
 			"启动 UI 工作流子 Agent 进行分析。支持 single 和 parallel 模式。默认从 package 内置 .pi/agents/ 加载 Agent，同时兼容用户本地 agents。",
 
+		promptSnippet: "Delegate UI analysis to the built-in workflow analysts.",
+		promptGuidelines: ["Use ui_workflow_subagent for independent UI analysis and review its results."],
 		parameters: SubagentParams,
 
 		async execute(_toolCallId, params, signal, onUpdate, ctx) {
 			const agentScope: AgentScope = params.agentScope ?? "user";
+			const dispatch = { model: ctx.model ? `${ctx.model.provider}/${ctx.model.id}` : undefined, thinkingLevel: ctx.thinkingLevel };
 			const discovery = discoverAgents(ctx.cwd, agentScope);
 			const agents = discovery.agents;
 
@@ -337,19 +343,13 @@ export default function (pi: ExtensionAPI) {
 
 			if (modeCount !== 1) {
 				const available = agents.map((a) => `${a.name} (${a.source})`).join(", ") || "none";
-				return {
-					content: [{ type: "text", text: `请传入 single（agent + task）或 parallel（tasks[]）模式。可用的 Agent：${available}` }],
-					details: makeDetails("single")([]),
-				};
+				throw new Error(`请传入 single（agent + task）或 parallel（tasks[]）模式。可用的 Agent：${available}`);
 			}
 
 			/* ---- parallel 模式 ---- */
 			if (params.tasks && params.tasks.length > 0) {
 				if (params.tasks.length > MAX_PARALLEL_TASKS) {
-					return {
-						content: [{ type: "text", text: `并行任务数量 (${params.tasks.length}) 超过最大限制 (${MAX_PARALLEL_TASKS})。` }],
-						details: makeDetails("parallel")([]),
-					};
+					throw new Error(`并行任务数量 (${params.tasks.length}) 超过最大限制 (${MAX_PARALLEL_TASKS})。`);
 				}
 
 				const allResults: SingleResult[] = new Array(params.tasks.length);
@@ -366,7 +366,7 @@ export default function (pi: ExtensionAPI) {
 				}
 
 				const results = await mapWithConcurrencyLimit(params.tasks, MAX_CONCURRENCY, async (t, index) => {
-					const result = await runSingleAgent(ctx.cwd, agents, t.agent, t.task, t.cwd, undefined, signal, undefined, makeDetails("parallel"));
+					const result = await runSingleAgent(ctx.cwd, dispatch, agents, t.agent, t.task, t.cwd, undefined, signal, undefined, makeDetails("parallel"));
 					allResults[index] = result;
 					return result;
 				});
@@ -374,27 +374,23 @@ export default function (pi: ExtensionAPI) {
 				const successCount = results.filter((r) => !isFailedResult(r)).length;
 				const summaries = results.map((r) => {
 					const status = isFailedResult(r) ? "failed" : "completed";
-					return `### [${r.agent}] ${status}\n\n${truncateParallelOutput(getResultOutput(r))}`;
+					return `### [${r.agent}] ${status}\n\n${getResultOutput(r)}`;
 				});
+				const output = await boundedOutput(`Parallel: ${successCount}/${results.length} succeeded\n\n${summaries.join("\n\n---\n\n")}`);
+				if (successCount !== results.length) throw new Error(output);
 				return {
-					content: [{ type: "text", text: `Parallel: ${successCount}/${results.length} succeeded\n\n${summaries.join("\n\n---\n\n")}` }],
+					content: [{ type: "text", text: output }],
 					details: makeDetails("parallel")(results),
 				};
 			}
 
 			/* ---- single 模式 ---- */
 			if (params.agent && params.task) {
-				const result = await runSingleAgent(ctx.cwd, agents, params.agent, params.task, params.cwd, undefined, signal, onUpdate, makeDetails("single"));
+				const result = await runSingleAgent(ctx.cwd, dispatch, agents, params.agent, params.task, params.cwd, undefined, signal, onUpdate, makeDetails("single"));
 				const isError = isFailedResult(result);
-				if (isError) {
-					return {
-						content: [{ type: "text", text: `Agent ${result.stopReason || "failed"}: ${getResultOutput(result)}` }],
-						details: makeDetails("single")([result]),
-						isError: true,
-					};
-				}
+				if (isError) throw new Error(await boundedOutput(`Agent ${result.stopReason || "failed"}: ${getResultOutput(result)}`));
 				return {
-					content: [{ type: "text", text: getFinalOutput(result.messages) || "(no output)" }],
+					content: [{ type: "text", text: await boundedOutput(getFinalOutput(result.messages) || "(no output)") }],
 					details: makeDetails("single")([result]),
 				};
 			}
